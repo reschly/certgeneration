@@ -49,7 +49,7 @@ void makeeccert256(int days, char* commonname)
 	X509 *x;
 	FILE *out;
 
-	key = EC_KEY_new_by_curve_name(NID_secp256k1);
+	key = EC_KEY_new_by_curve_name(NID_X9_62_prime256v1);
 	EC_KEY_generate_key(key);
 	EC_KEY_set_asn1_flag(key, OPENSSL_EC_NAMED_CURVE);
 	pkey = EVP_PKEY_new();
