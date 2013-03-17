@@ -38,6 +38,7 @@ X509* makeselfcert(EVP_PKEY *pkey, int days, char* commonname, const EVP_MD *has
 	char *eku;
 	BIGNUM *bn;
 	int type;
+	char subjaltname[512];
 
 	type = commonname_type(commonname);
 	switch(type)
@@ -45,10 +46,12 @@ X509* makeselfcert(EVP_PKEY *pkey, int days, char* commonname, const EVP_MD *has
 		case TYPE_WWW_SERVER:
 			cnField = "CN";
 			eku = "serverAuth";
+			strcpy(subjaltname, "DNS:");
 			break;
 		case TYPE_SMIME:
 			cnField = "emailAddress";
 			eku = "emailProtection";
+			strcpy(subjaltname, "email:");
 			break;
 		default:
 			return NULL;
@@ -69,6 +72,11 @@ X509* makeselfcert(EVP_PKEY *pkey, int days, char* commonname, const EVP_MD *has
 
 	add_ext(x, NID_key_usage, "critical,digitalSignature,keyEncipherment");
 	add_ext(x, NID_ext_key_usage, eku);
+	if (strlen(commonname) < 500)
+	{
+		strcat(subjaltname, commonname);
+		add_ext(x, NID_subject_alt_name, subjaltname);
+	}
 
 	X509_sign(x,pkey,hash);
 
