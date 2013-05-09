@@ -70,7 +70,7 @@ X509* makeselfcert(EVP_PKEY *pkey, int days, char* commonname, const EVP_MD *has
 	X509_NAME_add_entry_by_txt(name, cnField, MBSTRING_ASC, (unsigned char*)commonname, -1, -1, 0);
 	X509_set_issuer_name(x, name);
 
-	add_ext(x, NID_key_usage, "critical,digitalSignature,keyEncipherment");
+	add_ext(x, NID_key_usage, "critical,digitalSignature,keyEncipherment,keyAgreement");
 	add_ext(x, NID_ext_key_usage, eku);
 	if (strlen(commonname) < 500)
 	{
